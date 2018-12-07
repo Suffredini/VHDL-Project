@@ -53,7 +53,4 @@ begin
 		
 	cout <= cinout(N-1);
 	
-end data_flow;
-		
-			
-			
+end data_flow;			

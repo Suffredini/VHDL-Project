@@ -25,6 +25,7 @@ architecture bhv of CDMAReceiver_tb is -- Testbench architecture declaration
         -- Component to test (DUT) declaration
         -----------------------------------------------------------------------------------
         component CDMAReceiver is
+		generic (N: integer);
 		port(
 			Xs_chip_CDMAR	: in std_logic;
 			C_chip_CDMAR	: in std_logic;
@@ -41,6 +42,7 @@ architecture bhv of CDMAReceiver_tb is -- Testbench architecture declaration
 	  rst_tb <= '1' after T_RESET; -- Deasserting the reset after T_RESET nanosecods (remember: the reset is active low).
 	  
 	  test_CDMAReceiver: CDMAReceiver	  -- Shift register instantiation
+			generic map(N => N) -- N = log M (M numero di chip)
 			port map(
 				Xs_chip_CDMAR	=>	chipStream_tb,
 				C_chip_CDMAR	=>	codeWord_tb,
@@ -176,17 +178,18 @@ architecture bhv of CDMAReceiver_tb is -- Testbench architecture declaration
 				codeWord_tb <= '0';
 	
 			when 29 => 
-				chipStream_tb <= '1';
+				chipStream_tb <= '0';
 				codeWord_tb <= '0';
 
 			when 30 => 
-				chipStream_tb <= '1';
+				chipStream_tb <= '0';
 				codeWord_tb <= '0';
 
 			when 31 => 
 				chipStream_tb <= '0';
 				codeWord_tb <= '0';
-
+			-- 3
+			
 			when 32 => 
 				chipStream_tb <= '1';
 				codeWord_tb <= '0';

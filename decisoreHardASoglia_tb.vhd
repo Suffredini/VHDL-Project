@@ -25,13 +25,12 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
         -- Component to test (DUT) declaration
         -----------------------------------------------------------------------------------
         component decisoreHardASoglia is
-		generic (N: integer);
+		--generic (N: integer);
 		port(
 			S_chip_DHS	: in std_logic;
 			clock_DHS	: in std_logic;
 			reset_DHS	: in std_logic;
-			S_DHS	: out std_logic;
-			clock_16_DHS : out std_logic
+			S_DHS	: out std_logic
 		);
 		end component;
 	
@@ -42,13 +41,12 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 	  rst_tb <= '1' after T_RESET; -- Deasserting the reset after T_RESET nanosecods (remember: the reset is active low).
 	  
 	  test_DHS1: decisoreHardASoglia	  -- Shift register instantiation
-              generic map(N) -- It is necessary to specify the number of bits of the shift register (3 in this case). Try to change and watch the difference in the simulation.
+            --  generic map(N) -- It is necessary to specify the number of bits of the shift register (3 in this case). Try to change and watch the difference in the simulation.
 			port map(
 				S_chip_DHS	=> S_chip_tb,
 				clock_DHS	=> clk_tb ,
 				reset_DHS	=> rst_tb,
-				S_DHS	 => S_tb,
-				clock_16_DHS => clock_16_tb
+				S_DHS	 => S_tb
 	        );
 	  
 	  d_process: process(clk_tb, rst_tb) -- process used to make the testbench signals change synchronously with the rising edge of the clock
@@ -56,25 +54,24 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 	  begin
 	    if(rst_tb = '0') then
 			S_chip_tb <= '1';
-			t := 0;
 		elsif(rising_edge(clk_tb)) then
 		  case(t) is   -- specifying the input d_tb and end_sim depending on the value of t ( and so on the number of the passed clock cycles).
 			
-			when 1 => S_chip_tb <= '1';
+			when 1 => S_chip_tb <= '0';
 				
-			when 2 => S_chip_tb <= '1';
+			when 2 => S_chip_tb <= '0';
 				
-			when 3 => S_chip_tb <= '1';
+			when 3 => S_chip_tb <= '0';
 			
-			when 4 => S_chip_tb <= '1';
+			when 4 => S_chip_tb <= '0';
 			
-			when 5 => S_chip_tb <= '1';
+			when 5 => S_chip_tb <= '0';
 			
-			when 6 => S_chip_tb <= '1';
+			when 6 => S_chip_tb <= '0';
 			
-			when 7 => S_chip_tb <= '1';
+			when 7 => S_chip_tb <= '0';
 			
-			when 8 => S_chip_tb <= '1';
+			when 8 => S_chip_tb <= '0';
 			
 			when 9 => S_chip_tb <= '1';
 			
@@ -89,10 +86,10 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 			when 14 => S_chip_tb <= '1';
 			
 			when 15 => S_chip_tb <= '1';
-			
+			-- nuovo bit
 			when 16 => S_chip_tb <= '1';
 			
-			when 17 => S_chip_tb <= '1';
+			when 17 => S_chip_tb <= '0';
 			
 			when 18 => S_chip_tb <= '1';
 				
