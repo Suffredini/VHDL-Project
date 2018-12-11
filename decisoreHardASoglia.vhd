@@ -3,6 +3,7 @@ use IEEE.std_logic_1164.all;
 
 
 entity  decisoreHardASoglia is
+	generic (N: integer);
 	port(
 		S_chip_DHS	: in std_logic;
 		clock_DHS	: in std_logic;
@@ -14,26 +15,7 @@ end decisoreHardASoglia;
 
 
 architecture data_flow of decisoreHardASoglia is
-
-	function or_vector(slv : in std_logic_vector) return std_logic is
-	  variable res_v : std_logic := '1';  -- Null slv vector will also return '1'
-	begin
-	  for i in slv'range loop
-		res_v := res_v or slv(i);
-	  end loop;
-	  return res_v;
-	end function;
-	
-	function nor_vector(slv : in std_logic_vector) return std_logic is
-	  variable res_v : std_logic := '1';  -- Null slv vector will also return '1'
-	begin
-	  for i in slv'range loop
-		res_v := res_v nor slv(i);
-	  end loop;
-	  return res_v;
-	end function;
-	
-	constant N : integer := 4;
+--	constant N : integer := 4;
 	
 	component counter is
 		generic (N: integer);	
@@ -66,6 +48,7 @@ architecture data_flow of decisoreHardASoglia is
 			q : out std_logic_vector(N-1 downto 0)
 	    );
 	end component;
+	
 	signal counter_A_out : std_logic_vector(N-1 downto 0);
 	signal counter_A_in : std_logic_vector(N-1 downto 0);
 	signal counter_B_out : std_logic_vector(N-1 downto 0);
@@ -77,7 +60,9 @@ architecture data_flow of decisoreHardASoglia is
 	signal reset_counter_A : std_logic;
 	signal or_to_or : std_logic;
 	signal clock_N : std_logic;
-	--signal counter_B_nor : std_logic;
+
+	constant test_if_N_0 : std_logic_vector(N-1 downto 0) := (others => '0');
+	constant test_if_Nminus1_0 : std_logic_vector(N-2 downto 0) := (others => '0');
 	
 	begin 
 		COUNTER_A: counter generic map(N => N) port map(
@@ -90,8 +75,8 @@ architecture data_flow of decisoreHardASoglia is
 		RIPPLE_CARRY_ADDER: rippleCarryAdder generic map(N => N) port map(
 			s => RCA_out,
 			a => counter_A_out,
-			b => counter_A_in,--(others => '0'),
-			cin => '0',--S_chip_DHS,
+			b => (others => '0'),
+			cin => S_chip_DHS,
 			cout => RCA_cout	
 		); 
 		
@@ -115,23 +100,20 @@ architecture data_flow of decisoreHardASoglia is
 		S_tmp(0) <= RCA_cout or RCA_out(N-1);
 		S_DHS <= S_out(0);
 		
-		process (counter_B_out) is
-		begin	
-			case (counter_B_out) is
-				when "0001" => 
-					clock_N <= '1';
-					reset_counter_A <= reset_DHS;
-				when "0000" => 
-					clock_N <= '0';
-					reset_counter_A <= '0';
-				when others => 
-					clock_N <= '0';
-					reset_counter_A <= reset_DHS;
-			end case;
-		end process;
-
-
-		--reset_counter_A <= reset_DHS and (not counter_B_nor);
-		--clock_N <= clock_DHS and counter_B_nor;
 		
+		process (counter_B_out) is
+		begin
+			if ((counter_B_out(N-1 downto 1) = test_if_Nminus1_0) and (counter_B_out(0) = '1')) then 
+				-- check 0...01 then send clock to d_flip_flop
+				clock_N <= '1';
+				reset_counter_A <= reset_DHS;
+			elsif (counter_B_out = test_if_N_0) then
+				-- check 0...0 then send reset to counter A
+				clock_N <= '0';
+				reset_counter_A <= '0';
+			else
+				clock_N <= '0';
+				reset_counter_A <= reset_DHS;
+			end if;
+		end process;
 end data_flow;		

@@ -17,7 +17,6 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 	signal clk_tb : std_logic := '0'; -- clock signal, intialized to '0' 
 	signal rst_tb  : std_logic := '0'; -- reset signal
 	signal S_chip_tb   : std_logic;        -- d signal to connect to the d port of the component
-	signal clock_16_tb : std_logic;
 	signal S_tb   : std_logic;
 	signal end_sim : std_logic := '1'; -- signal to use to stop the simulation when there is nothing else to test
 	
@@ -25,7 +24,7 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
         -- Component to test (DUT) declaration
         -----------------------------------------------------------------------------------
         component decisoreHardASoglia is
-		--generic (N: integer);
+		generic (N: integer);
 		port(
 			S_chip_DHS	: in std_logic;
 			clock_DHS	: in std_logic;
@@ -41,7 +40,7 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 	  rst_tb <= '1' after T_RESET; -- Deasserting the reset after T_RESET nanosecods (remember: the reset is active low).
 	  
 	  test_DHS1: decisoreHardASoglia	  -- Shift register instantiation
-            --  generic map(N) -- It is necessary to specify the number of bits of the shift register (3 in this case). Try to change and watch the difference in the simulation.
+            generic map(N=>4) -- It is necessary to specify the number of bits of the shift register (3 in this case). Try to change and watch the difference in the simulation.
 			port map(
 				S_chip_DHS	=> S_chip_tb,
 				clock_DHS	=> clk_tb ,
@@ -54,49 +53,21 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 	  begin
 	    if(rst_tb = '0') then
 			S_chip_tb <= '1';
+			--t:=1;
 		elsif(rising_edge(clk_tb)) then
-		  case(t) is   -- specifying the input d_tb and end_sim depending on the value of t ( and so on the number of the passed clock cycles).
+			if(t = 50) then
+				end_sim <= '0';
+			elsif(t < 9 ) then
+				S_chip_tb <='0';
 			
-			when 1 => S_chip_tb <= '0';
-				
-			when 2 => S_chip_tb <= '0';
-				
-			when 3 => S_chip_tb <= '0';
-			
-			when 4 => S_chip_tb <= '0';
-			
-			when 5 => S_chip_tb <= '0';
-			
-			when 6 => S_chip_tb <= '0';
-			
-			when 7 => S_chip_tb <= '0';
-			
-			when 8 => S_chip_tb <= '0';
-			
-			when 9 => S_chip_tb <= '1';
-			
-			when 10 => S_chip_tb <= '1';
-			
-			when 11 => S_chip_tb <= '1';
-			
-			when 12 => S_chip_tb <= '1';
-			
-			when 13 => S_chip_tb <= '1';
-			
-			when 14 => S_chip_tb <= '1';
-			
-			when 15 => S_chip_tb <= '1';
-			-- nuovo bit
-			when 16 => S_chip_tb <= '1';
-			
-			when 17 => S_chip_tb <= '0';
-			
-			when 18 => S_chip_tb <= '1';
-				
-			when 19 => end_sim <= '0'; -- This command stops the simulation when t = 10
-            when others => null; -- Specifying that nothing happens in the other cases 
-			
-		  end case;
+			elsif (t < 16) then 
+				S_chip_tb <='1';	
+
+			elsif ( t<32) then
+				S_chip_tb <= '0';
+			else
+				S_chip_tb <='1';
+			end if;
 		  t := t + 1; -- the variable is updated exactly here (try to move this statement before the "case(t) is" one and watch the difference in the simulation)
 		end if;
 	  end process;
