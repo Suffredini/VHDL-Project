@@ -57,16 +57,19 @@ architecture bhv of decisoreHardASoglia_tb is -- Testbench architecture declarat
 		elsif(rising_edge(clk_tb)) then
 			if(t = 50) then
 				end_sim <= '0';
-			elsif(t < 9 ) then
+			elsif(t < 1 ) then
 				S_chip_tb <='0';
 			
 			elsif (t < 16) then 
-				S_chip_tb <='1';	
+				S_chip_tb <='0';
+
+			elsif (t < 23) then
+				S_chip_tb <= '1';
 
 			elsif ( t<32) then
 				S_chip_tb <= '0';
 			else
-				S_chip_tb <='1';
+				S_chip_tb <='0';
 			end if;
 		  t := t + 1; -- the variable is updated exactly here (try to move this statement before the "case(t) is" one and watch the difference in the simulation)
 		end if;

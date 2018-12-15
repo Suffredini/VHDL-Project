@@ -1,7 +1,6 @@
 library ieee;
     use ieee.std_logic_1164.all;
 
-
     entity full_adder is
         port( -- Input of the full-adder
                 a_fa   : in std_logic;
@@ -15,13 +14,13 @@ library ieee;
                 cout_fa : out std_logic
             );
     end full_adder;
-   architecture data_flow of full_adder is
-   
+	
+   architecture data_flow of full_adder is   
    begin
-   
+	  -- Calculate the output
       s_fa   <= a_fa xor b_fa xor cin_fa;
       
-      cout_fa <= (a_fa and b_fa) or (b_fa and cin_fa) or (cin_fa and a_fa);
-   
+	  -- Calculate te Carry out
+      cout_fa <= (a_fa and b_fa) or (b_fa and cin_fa) or (cin_fa and a_fa);   
    end data_flow;
     

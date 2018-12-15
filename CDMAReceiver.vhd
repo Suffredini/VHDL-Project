@@ -1,7 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
 
-
 entity  CDMAReceiver is
 	generic (N: integer);
 	port(
@@ -25,21 +24,19 @@ architecture data_flow of CDMAReceiver is
 		);
 	end component;
 	
+	-- Declare all signal used internally
 	signal S_chip_CDMAR : std_logic;
 	signal tmp : std_logic_vector(0 downto 0);
 	
 	begin 
-		
-		-- Decide il più probabile valore da presentare in uscita 
-		-- e genera il clock_16 (1 ogni 16 cicli di clock)
+		-- This component decides the most likely output after receiving N chips
 		DHS: decisoreHardASoglia  generic map(N => N) port map(
 			S_chip_DHS	=> S_chip_CDMAR,
 			clock_DHS	=> clock_CDMAR,
 			reset_DHS	=> reset_CDMAR,
 			S_DHS	=>	S_CDMAR
 		);
-			
-		-- Despreading
-		S_chip_CDMAR <= Xs_chip_CDMAR xor C_chip_CDMAR;
 		
+		-- Despreading
+		S_chip_CDMAR <= Xs_chip_CDMAR xor C_chip_CDMAR;		
 end data_flow;		

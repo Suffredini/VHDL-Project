@@ -2,8 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity rippleCarryAdder is
-	generic (N: integer);
-	
+	generic (N: integer);	
 	port(
 		a	: in std_logic_vector(N - 1 downto 0);
 		b	: in std_logic_vector(N - 1 downto 0);
@@ -14,7 +13,7 @@ entity rippleCarryAdder is
 end rippleCarryAdder;
 
 architecture data_flow of rippleCarryAdder is
-	-- qualcosa
+
 	component full_adder is  	
 		port(		
 			a_fa	: in std_logic;
@@ -47,10 +46,9 @@ begin
 				cout_fa => cinout(i),
 				s_fa => s(i)
 			);
-		end generate OTHER_BITS;
+		end generate OTHER_BITS;	
+	end generate GEN;	
 	
-	end generate GEN;
-		
 	cout <= cinout(N-1);
 	
 end data_flow;			

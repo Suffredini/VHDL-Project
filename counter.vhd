@@ -44,27 +44,22 @@ signal qc : std_logic_vector(N - 1 downto 0);
 
 begin 
 	
+	-- Sum new value with value keep by D_flip_flop
 	RIPPLE: rippleCarryAdder generic map(N => N) port map(
 		s => internal,
 		a => count_in,
-		--b => count_out,
 		b => qc,
 		cin => '0'
-		--cout => '-'	
-		);
+	);	
 	
-	
-	DFF: D_flip_flop generic map(N => N) port map(
-		d => internal,
-		rst => count_rst,
+	-- Keep actual value
+	DFF: D_flip_flop generic map(N => N) port map(		
 		clk => count_clk,
-		--count_out => q
+		rst => count_rst,
+		d => internal,
 		q => qc
 	);
 	
-	count_out <= qc;
-		
+	-- Connect D_flip_flops output with counter output
+	count_out <= qc;		
 end data_flow;
-		
-			
-			
