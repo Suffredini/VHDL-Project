@@ -109,7 +109,7 @@ architecture data_flow of decisoreHardASoglia is
 		S_DHS <= S_out(0);
 		
 		
-		process (counter_B_out) is
+		process (counter_B_out, reset_DHS) is
 		begin
 			if ((counter_B_out(N-1 downto 1) = test_if_Nminus1_0) and (counter_B_out(0) = '1')) then 
 				-- check 0...01 then send clock to d_flip_flop

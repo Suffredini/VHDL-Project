@@ -4,9 +4,9 @@ use IEEE.std_logic_1164.all;
 
 entity 	CDMAReceiverWrap is
 	port(
-		fw_w	: in std_logic_vector(3 downto 0);
-		led_w	: out std_logic_vector(3 downto 0);
-		yq_w	: out std_logic_vector(5 downto 0);
+		fw_w	: in std_logic_vector(1 downto 0);
+		led_w	: out std_logic_vector(1 downto 0);
+		yq_w	: out std_logic;
 		clk_w : in std_logic;
 		rst_w : in std_logic
 	);
@@ -33,9 +33,8 @@ architecture data_flow of CDMAReceiverWrap is
 			C_chip_CDMAR	=>	fw_w(1),
 			reset_CDMAR	=>	rst_w,
 			clock_CDMAR => clk_w,
-			S_CDMAR	=>	yq_w(0)
+			S_CDMAR	=>	yq_w
 		);
-	
 		led_w <= fw_w;
 
 end data_flow;
