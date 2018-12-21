@@ -24,31 +24,21 @@ architecture data_flow of rippleCarryAdder is
 	       );
 	end component;
 	
-signal cinout : std_logic_vector(N - 1 downto 0);
+signal cinout : std_logic_vector(N downto 0);
 
 begin 
-	GEN: for i in 0 to N-1 generate
-		FIRST: if i=0 generate	
-			UO: full_adder port map(
-				a_fa => a(i),
-				b_fa => b(i),
-				cin_fa => cin,
-				cout_fa => cinout(i),
-				s_fa => s(i)
-			);
-		end generate FIRST;
-		
-		OTHER_BITS: if i>0 generate
+		RIPPLE_GEN:for i in 0 to N - 1  generate
+			
 			UX: full_adder port map(
 				a_fa => a(i),
 				b_fa => b(i),
-				cin_fa => cinout(i-1),
-				cout_fa => cinout(i),
+				cin_fa => cinout(i),
+				cout_fa => cinout(i+1),
 				s_fa => s(i)
 			);
-		end generate OTHER_BITS;	
-	end generate GEN;	
-	
-	cout <= cinout(N-1);
+		end generate;	
+
+	cinout(0) <= cin;
+	cout <= cinout(N);
 	
 end data_flow;			

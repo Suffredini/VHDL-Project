@@ -41,7 +41,8 @@ architecture data_flow of decisoreHardASoglia is
 			clk : in std_logic;
 			rst : in std_logic;
 			d : in std_logic_vector(N-1 downto 0);
-			q : out std_logic_vector(N-1 downto 0)
+			q : out std_logic_vector(N-1 downto 0);
+			en: in std_logic
 	    );
 	end component;
 	
@@ -56,7 +57,8 @@ architecture data_flow of decisoreHardASoglia is
 	signal RCA_cout : std_logic;
 	signal reset_counter_A : std_logic;
 	signal or_to_or : std_logic;
-	signal clock_N : std_logic;
+	signal DFF_en : std_logic;
+
 
 	-- Declare consant used to simulate NOR port
 	constant test_if_N_0 : std_logic_vector(N-1 downto 0) := (others => '0');
@@ -93,7 +95,8 @@ architecture data_flow of decisoreHardASoglia is
 			d => S_tmp,
 			q => S_out,			
 			rst => reset_DHS,
-			clk => clock_N			
+			clk => clock_DHS,
+			en => DFF_en
 		);
 		
 		-- Extend S_chip_DHS on N bit and put it in COUNTER_A 
@@ -108,20 +111,15 @@ architecture data_flow of decisoreHardASoglia is
 		-- Connect output of D_FLIP_FLOP_OUT with ouput of decisoreHardASoglia
 		S_DHS <= S_out(0);
 		
-		
-		process (counter_B_out, reset_DHS) is
+		process (counter_B_out, reset_DHS, clock_DHS) is
 		begin
-			if ((counter_B_out(N-1 downto 1) = test_if_Nminus1_0) and (counter_B_out(0) = '1')) then 
-				-- check 0...01 then send clock to d_flip_flop
-				clock_N <= '1';
-				reset_counter_A <= reset_DHS;
-			elsif (counter_B_out = test_if_N_0) then
-				-- check 0...0 then send reset to counter A
-				clock_N <= '0';
-				reset_counter_A <= '0';
+			if (counter_B_out = test_if_N_0) then
+				-- check 0...0 (during N-chip arrival) then send reset to counter A and enabled D_flip_flop
+				DFF_en <= '1';
+				reset_counter_A <= reset_DHS and '0';
 			else
-				clock_N <= '0';
+				DFF_en <= '0';
 				reset_counter_A <= reset_DHS;
-			end if;
+			end if;			
 		end process;
 end data_flow;		

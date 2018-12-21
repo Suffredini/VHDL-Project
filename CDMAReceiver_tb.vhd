@@ -57,24 +57,24 @@ architecture bhv of CDMAReceiver_tb is
 		
 		begin
 			if(rst_tb = '0') then
-				chipStream_tb <= '1';
-				codeWord_tb <= '0';
+				--chipStream_tb <= '1';
+				--codeWord_tb <= '1';
 			elsif(rising_edge(clk_tb)) then
 				if(t = 48) then
 					end_sim <= '0';
-				elsif(t < 8 ) then
+				elsif(t <= 7 ) then
 					chipStream_tb <= '1';
 					codeWord_tb <= '0';
 				
-				elsif (t < 16) then 
-					chipStream_tb <= '1';
-					codeWord_tb <= '1';
-
-				elsif (t < 24) then
+				elsif (t <= 15) then 
 					chipStream_tb <= '1';
 					codeWord_tb <= '0';
 
-				elsif ( t<33) then
+				elsif (t <= 23) then
+					chipStream_tb <= '1';
+					codeWord_tb <= '0';
+
+				elsif ( t<=31) then
 					chipStream_tb <= '1';
 					codeWord_tb <= '1';
 				else

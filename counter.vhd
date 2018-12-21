@@ -34,7 +34,8 @@ architecture data_flow of counter is
 			clk : in std_logic;
 			rst : in std_logic;
 			d : in std_logic_vector(N-1 downto 0);
-			q : out std_logic_vector(N-1 downto 0)
+			q : out std_logic_vector(N-1 downto 0);
+			en : std_logic
 	    );
 	end component;
 	
@@ -57,7 +58,8 @@ begin
 		clk => count_clk,
 		rst => count_rst,
 		d => internal,
-		q => qc
+		q => qc,
+		en => '1'
 	);
 	
 	-- Connect D_flip_flops output with counter output
