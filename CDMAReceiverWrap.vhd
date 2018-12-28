@@ -27,7 +27,7 @@ architecture data_flow of CDMAReceiverWrap is
 	begin 
 	
 		wrap_CDMAReceiver: CDMAReceiver
-		generic map(N => 4) -- N = log M (M numero di chip)
+		generic map(N => 4) -- N = log2(M) (M = Spreading Factor)
 		port map(
 			Xs_chip_CDMAR	=>	fw_w(0),
 			C_chip_CDMAR	=>	fw_w(1),

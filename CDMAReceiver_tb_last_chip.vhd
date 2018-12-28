@@ -61,19 +61,23 @@ architecture bhv of CDMAReceiver_tb_last_chip is
 			elsif(rising_edge(clk_tb)) then
 				if(t = 50) then
 					end_sim <= '0';
+					
+				-- bit 0-15 are chips of first bit, bit 16-31 are chips of second bit
 				elsif(t <= 7 ) then
 					chipStream_tb <= '1';
 					codeWord_tb <= '1';
 				
-				elsif (t <= 15) then 
+				elsif (t <= 15) then
+					-- Last 8 chips set output to '1' (if the last is missed output became '0')
 					chipStream_tb <= '1';
 					codeWord_tb <= '0';
 
 				elsif (t <= 23) then
 					chipStream_tb <= '1';
 					codeWord_tb <= '1';
-
+				
 				elsif ( t<=31) then
+					-- Last 8 chips set output to '1' (if the last is missed output became '0')
 					chipStream_tb <= '1';
 					codeWord_tb <= '0';
 				else
